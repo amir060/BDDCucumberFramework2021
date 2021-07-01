@@ -1,6 +1,6 @@
-pipeline{
+pipelines{
     agent any
-    stage{
+    stages{
 
         stage ("Compile Stage"){
 
@@ -10,28 +10,29 @@ pipeline{
                 }
             }
         }
-    }
-    stage{
 
-        stage ("Test Stage"){
 
-            steps{
-                withMaven (){
-                    sh 'mvn clean test'
+            stage ("Test Stage"){
+
+                steps{
+                    withMaven (){
+                        sh 'mvn clean test'
+                    }
+                }
+            }
+
+        stage{
+
+            stage ("Cucumber Reports"){
+
+                steps{
+                    cucumber buildStatus:"UNSTABLE",
+                            fileIncludePattern:"**/cucumber.json",
+                            jsonReportDirectory: "target"
+
                 }
             }
         }
     }
-    stage{
 
-        stage ("Cucumber Reports"){
-
-            steps{
-                cucumber buildStatus:"UNSTABLE",
-                        fileIncludePattern:"**/cucumber.json",
-                       jsonReportDirectory: "target"
-
-            }
-        }
-    }
 }
